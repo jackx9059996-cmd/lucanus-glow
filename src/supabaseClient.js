@@ -5,10 +5,8 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
-export const allowedEmails = (import.meta.env.VITE_ALLOWED_EMAILS || 'jack.x9059996@gmail.com')
-  .split(',')
-  .map((item) => item.trim().toLowerCase())
-  .filter(Boolean)
+export const loginAccount = (import.meta.env.VITE_LOGIN_ACCOUNT || 'jack.x9059996').trim().toLowerCase()
+export const authEmail = (import.meta.env.VITE_AUTH_EMAIL || 'jack.x9059996@gmail.com').trim().toLowerCase()
 
 export const sessionMaxAgeDays = Number(import.meta.env.VITE_SESSION_MAX_AGE_DAYS || 60)
 
@@ -21,4 +19,3 @@ export const supabase = isSupabaseConfigured
       },
     })
   : null
-

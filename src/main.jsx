@@ -4,7 +4,7 @@ import { Background, Controls, Handle, Position, ReactFlow } from '@xyflow/react
 import '@xyflow/react/dist/style.css'
 import { ChevronDown, ChevronRight, CirclePlus, Dna, Menu, PanelLeftClose, Pencil, Plus, Trash2, X } from 'lucide-react'
 import CreateRecordForm from './CreateRecordForm'
-import { allowedEmails, isSupabaseConfigured, sessionMaxAgeDays, supabase } from './supabaseClient'
+import { authEmail, isSupabaseConfigured, loginAccount, sessionMaxAgeDays, supabase } from './supabaseClient'
 import './styles.css'
 
 const initialData = [
@@ -85,8 +85,7 @@ const getGenerationCode = (lineage) =>
 
 const normalizeAccount = (account) => {
   const value = account.trim().toLowerCase()
-  if (value === 'jack.x9059996') return 'jack.x9059996@gmail.com'
-  return value
+  return value === loginAccount ? authEmail : ''
 }
 
 const isSessionExpired = () => {
@@ -96,7 +95,7 @@ const isSessionExpired = () => {
 }
 
 function LoginScreen({ onLogin }) {
-  const [account, setAccount] = useState('jack.x9059996')
+  const [account, setAccount] = useState(loginAccount)
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -107,7 +106,7 @@ function LoginScreen({ onLogin }) {
     setError('')
 
     const email = normalizeAccount(account)
-    if (!allowedEmails.includes(email)) {
+    if (!email) {
       setSubmitting(false)
       setError('這個帳號沒有此網站的使用權限。')
       return
@@ -815,7 +814,7 @@ function App() {
     let alive = true
     const acceptSession = async (nextSession) => {
       const email = nextSession?.user?.email?.toLowerCase()
-      const allowed = email && allowedEmails.includes(email)
+      const allowed = email === authEmail
 
       if (!nextSession || !allowed || isSessionExpired()) {
         if (nextSession) await supabase.auth.signOut()

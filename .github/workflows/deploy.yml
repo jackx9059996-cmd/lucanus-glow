@@ -39,7 +39,8 @@ jobs:
         env:
           VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
-          VITE_ALLOWED_EMAILS: ${{ secrets.VITE_ALLOWED_EMAILS }}
+          VITE_LOGIN_ACCOUNT: ${{ secrets.VITE_LOGIN_ACCOUNT }}
+          VITE_AUTH_EMAIL: ${{ secrets.VITE_AUTH_EMAIL }}
           VITE_SESSION_MAX_AGE_DAYS: 60
 
       - name: Upload artifact
