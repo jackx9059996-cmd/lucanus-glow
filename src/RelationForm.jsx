@@ -30,6 +30,17 @@ export default function RelationForm({ target, onClose, onCreate }) {
     })
   }
 
+  const chooseRelationType = (relationType) => {
+    setForm((current) => {
+      const next = { ...current, relationType }
+      if (relationType === 'partner' && current.gender === 'larva') {
+        next.gender = oppositeGender(target.gender)
+        next.unit = 'mm'
+      }
+      return next
+    })
+  }
+
   const submit = (event) => {
     event.preventDefault()
     const id = Date.now()
@@ -73,13 +84,29 @@ export default function RelationForm({ target, onClose, onCreate }) {
         </div>
 
         <div className="form-grid relation-grid">
-          <label className="full">
-            關聯類型
-            <select value={form.relationType} onChange={update('relationType')}>
-              <option value="partner">父代／母代（配偶、另一親代）</option>
-              <option value="child">子代</option>
-            </select>
-          </label>
+          <div className="full relation-type-field">
+            <span className="relation-type-label">關聯類型</span>
+            <div className="relation-type-options" role="group" aria-label="關聯類型">
+              <button
+                type="button"
+                className={form.relationType === 'partner' ? 'active' : ''}
+                aria-pressed={form.relationType === 'partner'}
+                onClick={() => chooseRelationType('partner')}
+              >
+                <strong>父代／母代</strong>
+                <small>建立配偶或另一親代</small>
+              </button>
+              <button
+                type="button"
+                className={form.relationType === 'child' ? 'active' : ''}
+                aria-pressed={form.relationType === 'child'}
+                onClick={() => chooseRelationType('child')}
+              >
+                <strong>子代</strong>
+                <small>建立這個個體的後代</small>
+              </button>
+            </div>
+          </div>
 
           <label>
             個體名稱

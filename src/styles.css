@@ -1126,6 +1126,62 @@ textarea {
   resize: vertical;
 }
 
+.relation-type-field {
+  display: grid;
+  gap: 8px;
+}
+
+.relation-type-label {
+  color: #62715d;
+  font-size: 12px;
+}
+
+.relation-type-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.relation-type-options button {
+  min-height: 68px;
+  border: 1px solid #d9e4d2;
+  border-radius: 12px;
+  padding: 11px 13px;
+  background: #fff;
+  color: #52624c;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+}
+
+.relation-type-options button:hover {
+  border-color: #80b155;
+}
+
+.relation-type-options button.active {
+  border-color: #336a29;
+  background: #f1f7e9;
+  color: #285620;
+  box-shadow: inset 0 0 0 1px #336a29;
+}
+
+.relation-type-options strong,
+.relation-type-options small {
+  display: block;
+}
+
+.relation-type-options strong {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.relation-type-options small {
+  margin-top: 4px;
+  color: #7b8c73;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
 .secondary-button {
   border: 1px solid #d6e1cf;
   border-radius: 10px;
