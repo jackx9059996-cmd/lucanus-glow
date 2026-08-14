@@ -229,7 +229,8 @@ textarea {
 }
 
 .tree-nav {
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding-bottom: 20px;
 }
 
@@ -247,28 +248,41 @@ textarea {
 }
 
 .nav-parent {
-  width: 100%;
-  display: flex;
+  min-width: 0;
+  width: auto;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
   gap: 8px;
   align-items: center;
-  padding: 11px 16px;
+  padding: 9px 4px 9px 12px;
   color: #293427;
   font-size: 13px;
 }
 
 .nav-parent-row {
-  display: flex;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
 }
 
 .nav-parent-row .nav-parent {
-  flex: 1;
+  min-width: 0;
 }
 
 .nav-manage {
   display: flex;
   gap: 2px;
-  padding-right: 8px;
+  flex: 0 0 auto;
+  padding: 0 7px 0 2px;
+}
+
+.nav-manage button {
+  width: 24px;
+  height: 28px;
+  padding: 0;
+  display: grid;
+  place-items: center;
 }
 
 .nav-manage button,
@@ -286,15 +300,29 @@ textarea {
   color: #336a29;
 }
 
-.nav-parent span {
+.nav-parent .nav-chevron {
   color: #82927a;
   display: flex;
+}
+
+.nav-species-names {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  line-height: 1.2;
 }
 
 .nav-parent em {
   font-family: Georgia, serif;
   color: #336a29;
   font-style: italic;
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 .nav-parent strong {
@@ -531,6 +559,7 @@ textarea {
 }
 
 .drawer-date-item {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 7px;
@@ -567,6 +596,19 @@ textarea {
   font-size: 12px;
   line-height: 1;
   outline: none;
+}
+
+.drawer-date-item .drawer-date-empty {
+  position: absolute;
+  left: 43px;
+  right: 29px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #8a9983;
+  pointer-events: none;
 }
 
 .drawer-header .eyebrow {

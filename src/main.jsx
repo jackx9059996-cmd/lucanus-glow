@@ -84,6 +84,9 @@ const dashboardStorageKey = 'lucanus-glow-dashboard-v1'
 const getGenerationCode = (lineage) =>
   lineage.generationCode || lineage.lineageName.match(/\b(WD|WF\d*|CBF\d*)\b/)?.[1]
 
+const toDateInputValue = (value) =>
+  /^\d{4}[/-]\d{2}[/-]\d{2}$/.test(value || '') ? value.replaceAll('/', '-') : ''
+
 const normalizeAccount = (account) => {
   const value = account.trim().toLowerCase()
   return value === loginAccount ? authEmail : ''
@@ -185,13 +188,15 @@ function SidebarMenu({ data, activeLineage, collapsed, onToggle, onSelect, onCre
               <div className="nav-group" key={category.categoryId}>
                 <div className="nav-parent-row">
                   <button className="nav-parent" onClick={() => toggle(category.categoryId)}>
-                    <span>{openIds.has(category.categoryId) ? <ChevronDown size={15} /> : <ChevronRight size={15} />}</span>
-                    <em>{category.scientificName}</em>
-                    <strong>{category.commonName}</strong>
+                    <span className="nav-chevron">{openIds.has(category.categoryId) ? <ChevronDown size={15} /> : <ChevronRight size={15} />}</span>
+                    <span className="nav-species-names">
+                      <em>{category.scientificName}</em>
+                      <strong>{category.commonName}</strong>
+                    </span>
                   </button>
                   <div className="nav-manage">
-                    <button type="button" title="修改物種" onClick={() => onEditCategory(category)}><Pencil size={12} /></button>
-                    <button type="button" title="刪除物種" onClick={() => onDeleteCategory(category.categoryId)}><Trash2 size={12} /></button>
+                    <button type="button" title="修改物種" aria-label={`修改 ${category.commonName}`} onClick={() => onEditCategory(category)}><Pencil size={14} /></button>
+                    <button type="button" title="刪除物種" aria-label={`刪除 ${category.commonName}`} onClick={() => onDeleteCategory(category.categoryId)}><Trash2 size={14} /></button>
                   </div>
                 </div>
 
@@ -348,6 +353,9 @@ function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDe
 
   if (!beetle) return null
 
+  const pupaDateValue = toDateInputValue(beetle.attributes.pupaDate)
+  const hatchDateValue = toDateInputValue(beetle.attributes.hatchDate)
+
   const submit = (event) => {
     event.preventDefault()
     if (!record.note.trim()) return
@@ -384,11 +392,13 @@ function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDe
           <div className="drawer-dates">
             <div className="drawer-date-item">
               <span>化蛹</span>
-              <input type="date" value={(beetle.attributes.pupaDate || '').replaceAll('/', '-')} onChange={(event) => updateDate('pupaDate', event.target.value)} aria-label="化蛹日期" />
+              <input type="date" value={pupaDateValue} onChange={(event) => updateDate('pupaDate', event.target.value)} aria-label="化蛹日期" />
+              {!pupaDateValue && <span className="drawer-date-empty">未填寫</span>}
             </div>
             <div className="drawer-date-item">
               <span>羽化</span>
-              <input type="date" value={(beetle.attributes.hatchDate || '').replaceAll('/', '-')} onChange={(event) => updateDate('hatchDate', event.target.value)} aria-label="羽化日期" />
+              <input type="date" value={hatchDateValue} onChange={(event) => updateDate('hatchDate', event.target.value)} aria-label="羽化日期" />
+              {!hatchDateValue && <span className="drawer-date-empty">未填寫</span>}
             </div>
           </div>
         </div>
