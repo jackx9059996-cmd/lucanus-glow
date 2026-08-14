@@ -801,6 +801,7 @@ textarea {
 .feed-form textarea,
 .form-grid input,
 .form-grid select,
+.form-grid textarea,
 .form-section select,
 .form-section input,
 .form-section textarea,
@@ -830,6 +831,7 @@ textarea {
 .feed-form textarea:focus,
 .form-grid input:focus,
 .form-grid select:focus,
+.form-grid textarea:focus,
 .form-section select:focus,
 .form-section input:focus,
 .form-section textarea:focus,
@@ -1042,6 +1044,19 @@ textarea {
   gap: 9px;
   border-top: 1px solid #edf0e9;
   padding: 17px 25px;
+}
+
+.relation-backdrop {
+  z-index: 85;
+}
+
+.relation-modal {
+  width: min(680px, 100%);
+}
+
+.relation-grid textarea {
+  min-height: 76px;
+  resize: vertical;
 }
 
 .secondary-button {
