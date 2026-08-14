@@ -253,31 +253,32 @@ const nodeTypes = { beetle: BeetleNode }
 function toFlow(tree, onSelect, onDelete, onAddRelation) {
   const levels = []
   const edges = []
+  const contexts = new Map()
 
-  const walk = (item, depth = 0, parent) => {
+  const summary = (item) => ({ id: item.id, name: item.name, gender: item.gender, size: item.size })
+
+  const walk = (item, depth = 0) => {
     ;(levels[depth] ||= []).push(item)
     const partners = item.partners || []
     levels[depth].push(...partners)
 
-    if (parent) {
-      edges.push({
-        id: `${parent}-${item.id}`,
-        source: parent,
-        target: item.id,
-        type: 'smoothstep',
-      })
-    }
+    contexts.set(item.id, { coParents: partners.map(summary) })
+    partners.forEach((partner) => contexts.set(partner.id, { coParents: [summary(item)] }))
 
     item.children?.forEach((child) => {
-      partners.forEach((partner) => {
+      const parentIds = child.parentIds?.length
+        ? child.parentIds
+        : [item.id, partners[0]?.id].filter(Boolean)
+
+      parentIds.forEach((parentId) => {
         edges.push({
-          id: `${partner.id}-${child.id}`,
-          source: partner.id,
+          id: `${parentId}-${child.id}`,
+          source: parentId,
           target: child.id,
           type: 'smoothstep',
         })
       })
-      walk(child, depth + 1, item.id)
+      walk(child, depth + 1)
     })
   }
 
@@ -289,7 +290,7 @@ function toFlow(tree, onSelect, onDelete, onAddRelation) {
         id: item.id,
         type: 'beetle',
         position: { x: index * 280 + (depth === 0 ? 180 : 0), y: depth * 255 },
-        data: { ...item, onSelect, onDelete, onAddRelation },
+        data: { ...item, familyContext: contexts.get(item.id), onSelect, onDelete, onAddRelation },
       })),
     ),
     edges,

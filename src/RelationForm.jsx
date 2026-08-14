@@ -6,6 +6,7 @@ const oppositeGender = (gender) => (gender === 'female' ? 'male' : 'female')
 export default function RelationForm({ target, onClose, onCreate }) {
   const [form, setForm] = useState(() => ({
     relationType: 'partner',
+    coParentId: target.familyContext?.coParents?.[0]?.id || '',
     name: '',
     gender: oppositeGender(target.gender),
     measurement: '',
@@ -49,6 +50,9 @@ export default function RelationForm({ target, onClose, onCreate }) {
         note: form.note.trim() || undefined,
       },
       feedingRecords: [],
+      parentIds: form.relationType === 'child'
+        ? [target.id, form.coParentId].filter(Boolean)
+        : undefined,
       children: [],
       partners: [],
     })
@@ -90,6 +94,20 @@ export default function RelationForm({ target, onClose, onCreate }) {
               {form.relationType === 'child' && <option value="larva">幼蟲</option>}
             </select>
           </label>
+
+          {form.relationType === 'child' && target.familyContext?.coParents?.length > 0 && (
+            <label className="full">
+              另一親代
+              <select value={form.coParentId} onChange={update('coParentId')}>
+                <option value="">暫不指定</option>
+                {target.familyContext.coParents.map((parent) => (
+                  <option key={parent.id} value={parent.id}>
+                    {parent.name}｜{parent.gender === 'male' ? '公蟲' : '母蟲'}｜{parent.size}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
 
           <label>
             尺寸／重量
