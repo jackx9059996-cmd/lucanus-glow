@@ -1108,8 +1108,11 @@ textarea {
   }
 
   .sidebar.is-collapsed {
-    width: 56px;
-    flex-basis: 56px;
+    width: 0;
+    flex-basis: 0;
+    border-right: 0;
+    box-shadow: none;
+    pointer-events: none;
   }
 
   .content-header {

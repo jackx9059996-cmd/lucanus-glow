@@ -491,7 +491,9 @@ function DashboardApp({ session, onLogout }) {
   })
   const [cloudLoaded, setCloudLoaded] = useState(!isSupabaseConfigured || !session)
   const [syncState, setSyncState] = useState(isSupabaseConfigured ? 'loading' : 'local')
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(() =>
+    window.matchMedia('(max-width: 640px)').matches,
+  )
   const [showForm, setShowForm] = useState(false)
   const [active, setActive] = useState(() => ({
     category: initialData[0],
