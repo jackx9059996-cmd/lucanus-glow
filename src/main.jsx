@@ -323,9 +323,10 @@ function FamilyTree({ lineage, onNodeSelect, onDeleteNode, onAddRelation }) {
   )
 }
 
-function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDeleteRecord, onUpdateBeetle }) {
+function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDeleteRecord, onUpdateBeetle, onUpdateSize }) {
   const [showRecordForm, setShowRecordForm] = useState(false)
   const [editingId, setEditingId] = useState(null)
+  const [sizeDraft, setSizeDraft] = useState('')
   const [record, setRecord] = useState({
     date: new Date().toISOString().slice(0, 10).replaceAll('-', '/'),
     type: '進食',
@@ -336,6 +337,7 @@ function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDe
     if (beetle) {
       setShowRecordForm(false)
       setEditingId(null)
+      setSizeDraft(beetle.size === '—' ? '' : beetle.size)
       setRecord({
         date: new Date().toISOString().slice(0, 10).replaceAll('-', '/'),
         type: '進食',
@@ -364,6 +366,14 @@ function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDe
   }
 
   const updateDate = (field, value) => onUpdateBeetle(beetle.id, { [field]: value.replaceAll('-', '/') })
+  const commitSize = () => {
+    const value = sizeDraft.trim()
+    if (!value) {
+      setSizeDraft(beetle.size === '—' ? '' : beetle.size)
+      return
+    }
+    if (value !== beetle.size) onUpdateSize(beetle.id, value)
+  }
 
   return (
     <aside className="detail-drawer">
@@ -386,7 +396,23 @@ function BeetleDetailDrawer({ beetle, onClose, onAddRecord, onUpdateRecord, onDe
         <div className="drawer-topside">
           <div className="drawer-quick-meta">
             <div className="quick-meta-item">
-              <b>{symbolForGender[beetle.gender]} {beetle.size}</b>
+              <b>{symbolForGender[beetle.gender]}</b>
+              <input
+                className="quick-size-input"
+                value={sizeDraft}
+                size={Math.min(Math.max(sizeDraft.length, 4), 18)}
+                onChange={(event) => setSizeDraft(event.target.value)}
+                onBlur={commitSize}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') event.currentTarget.blur()
+                  if (event.key === 'Escape') {
+                    setSizeDraft(beetle.size === '—' ? '' : beetle.size)
+                    event.currentTarget.blur()
+                  }
+                }}
+                aria-label="修改尺寸或重量"
+                placeholder="尺寸"
+              />
             </div>
           </div>
 
@@ -691,6 +717,17 @@ function DashboardApp({ session, onLogout }) {
     setSelectedBeetle((current) => current?.id === beetleId ? { ...current, attributes: { ...current.attributes, ...attributes } } : current)
   }
 
+  const updateBeetleSize = (beetleId, size) => {
+    const update = (node) => node.id === beetleId
+      ? { ...node, size }
+      : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    setData((categories) => categories.map((category) => ({
+      ...category,
+      lineages: category.lineages.map((lineage) => ({ ...lineage, familyTree: update(lineage.familyTree) })),
+    })))
+    setSelectedBeetle((current) => current?.id === beetleId ? { ...current, size } : current)
+  }
+
   const updateRecord = (beetleId, record) => {
     const update = (node) => node.id === beetleId
       ? { ...node, feedingRecords: (node.feedingRecords || []).map((item) => item.id === record.id ? record : item) }
@@ -846,6 +883,7 @@ function DashboardApp({ session, onLogout }) {
           onUpdateRecord={updateRecord}
           onDeleteRecord={deleteRecord}
           onUpdateBeetle={updateBeetle}
+          onUpdateSize={updateBeetleSize}
         />
 
         {relationTarget && (

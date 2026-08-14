@@ -624,6 +624,31 @@ textarea {
   color: #273520;
 }
 
+.quick-size-input {
+  width: auto;
+  max-width: 132px;
+  min-width: 42px;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  padding: 1px 2px;
+  background: transparent;
+  color: #336a29;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  outline: none;
+}
+
+.quick-size-input:hover,
+.quick-size-input:focus {
+  border-bottom-color: #80b155;
+}
+
+.quick-size-input::placeholder {
+  color: #7f9377;
+  font-weight: 600;
+}
+
 .drawer-body {
   min-height: 0;
   flex: 1;
