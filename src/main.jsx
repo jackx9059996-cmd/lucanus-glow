@@ -260,6 +260,8 @@ function toFlow(tree, onSelect, onDelete, onAddRelation) {
   const edges = []
   const contexts = new Map()
 
+  if (!tree) return { nodes: [], edges: [] }
+
   const summary = (item) => ({ id: item.id, name: item.name, gender: item.gender, size: item.size })
 
   const walk = (item, depth = 0) => {
@@ -302,12 +304,27 @@ function toFlow(tree, onSelect, onDelete, onAddRelation) {
   }
 }
 
-function FamilyTree({ lineage, onNodeSelect, onDeleteNode, onAddRelation }) {
+function FamilyTree({ lineage, onNodeSelect, onDeleteNode, onAddRelation, onCreateRoot }) {
   const flow = useMemo(
     () => toFlow(lineage.familyTree, onNodeSelect, onDeleteNode, onAddRelation),
     [lineage, onNodeSelect, onDeleteNode, onAddRelation],
   )
   const onInit = useCallback((instance) => requestAnimationFrame(() => instance.fitView({ padding: 0.28 })), [])
+
+  if (!lineage.familyTree) {
+    return (
+      <section className="content-tree empty-family-tree">
+        <div>
+          <Dna size={28} />
+          <h3>這個血統目前沒有個體</h3>
+          <p>起始個體已刪除，血統資料仍然保留。</p>
+          <button className="create-button" type="button" onClick={onCreateRoot}>
+            <CirclePlus size={17} /> 新增起始個體
+          </button>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="content-tree">
@@ -546,6 +563,7 @@ function DashboardApp({ session, onLogout }) {
     window.matchMedia('(max-width: 640px)').matches,
   )
   const [showForm, setShowForm] = useState(false)
+  const [createTarget, setCreateTarget] = useState(null)
   const [active, setActive] = useState(() => ({
     category: initialData[0],
     lineage: initialData[0].lineages[0],
@@ -647,10 +665,12 @@ function DashboardApp({ session, onLogout }) {
                     ? lineage
                     : {
                         ...lineage,
-                        familyTree: {
-                          ...lineage.familyTree,
-                          children: [...(lineage.familyTree.children || []), payload.record],
-                        },
+                        familyTree: lineage.familyTree
+                          ? {
+                              ...lineage.familyTree,
+                              children: [...(lineage.familyTree.children || []), payload.record],
+                            }
+                          : payload.record,
                       },
                 ),
               },
@@ -673,8 +693,9 @@ function DashboardApp({ session, onLogout }) {
   }
 
   const addRecord = (beetleId, record) => {
-    const update = (node) =>
-      node.id === beetleId
+    const update = (node) => {
+      if (!node) return node
+      return node.id === beetleId
         ? {
             ...node,
             attributes: {
@@ -689,6 +710,7 @@ function DashboardApp({ session, onLogout }) {
             partners: (node.partners || []).map(update),
             children: (node.children || []).map(update),
           }
+    }
 
     setData((categories) =>
       categories.map((category) => ({
@@ -717,9 +739,12 @@ function DashboardApp({ session, onLogout }) {
   }
 
   const updateBeetle = (beetleId, attributes) => {
-    const update = (node) => node.id === beetleId
-      ? { ...node, attributes: { ...node.attributes, ...attributes } }
-      : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    const update = (node) => {
+      if (!node) return node
+      return node.id === beetleId
+        ? { ...node, attributes: { ...node.attributes, ...attributes } }
+        : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    }
     setData((categories) => categories.map((category) => ({
       ...category,
       lineages: category.lineages.map((lineage) => ({ ...lineage, familyTree: update(lineage.familyTree) })),
@@ -728,9 +753,12 @@ function DashboardApp({ session, onLogout }) {
   }
 
   const updateBeetleSize = (beetleId, size) => {
-    const update = (node) => node.id === beetleId
-      ? { ...node, size }
-      : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    const update = (node) => {
+      if (!node) return node
+      return node.id === beetleId
+        ? { ...node, size }
+        : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    }
     setData((categories) => categories.map((category) => ({
       ...category,
       lineages: category.lineages.map((lineage) => ({ ...lineage, familyTree: update(lineage.familyTree) })),
@@ -739,24 +767,31 @@ function DashboardApp({ session, onLogout }) {
   }
 
   const updateRecord = (beetleId, record) => {
-    const update = (node) => node.id === beetleId
-      ? { ...node, feedingRecords: (node.feedingRecords || []).map((item) => item.id === record.id ? record : item) }
-      : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    const update = (node) => {
+      if (!node) return node
+      return node.id === beetleId
+        ? { ...node, feedingRecords: (node.feedingRecords || []).map((item) => item.id === record.id ? record : item) }
+        : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    }
     setData((categories) => categories.map((category) => ({ ...category, lineages: category.lineages.map((lineage) => ({ ...lineage, familyTree: update(lineage.familyTree) })) })))
     setSelectedBeetle((current) => current?.id === beetleId ? { ...current, feedingRecords: (current.feedingRecords || []).map((item) => item.id === record.id ? record : item) } : current)
   }
 
   const deleteRecord = (beetleId, recordId) => {
     if (!window.confirm('確定要刪除這筆流水帳紀錄嗎？')) return
-    const update = (node) => node.id === beetleId
-      ? { ...node, feedingRecords: (node.feedingRecords || []).filter((item) => item.id !== recordId) }
-      : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    const update = (node) => {
+      if (!node) return node
+      return node.id === beetleId
+        ? { ...node, feedingRecords: (node.feedingRecords || []).filter((item) => item.id !== recordId) }
+        : { ...node, partners: (node.partners || []).map(update), children: (node.children || []).map(update) }
+    }
     setData((categories) => categories.map((category) => ({ ...category, lineages: category.lineages.map((lineage) => ({ ...lineage, familyTree: update(lineage.familyTree) })) })))
     setSelectedBeetle((current) => current?.id === beetleId ? { ...current, feedingRecords: (current.feedingRecords || []).filter((item) => item.id !== recordId) } : current)
   }
 
   const createRelation = (targetId, relationType, record) => {
     const update = (node) => {
+      if (!node) return node
       const partnerIndex = (node.partners || []).findIndex((partner) => partner.id === targetId)
 
       if (node.id === targetId) {
@@ -789,13 +824,32 @@ function DashboardApp({ session, onLogout }) {
   }
 
   const deleteNode = (nodeId) => {
-    if (nodeId === active.lineage.familyTree.id || !window.confirm('確定要刪除這個族譜節點及其後代嗎？')) return
-    const remove = (node) => ({
-      ...node,
-      partners: (node.partners || []).filter((partner) => partner.id !== nodeId).map(remove),
-      children: (node.children || []).filter((child) => child.id !== nodeId).map(remove),
-    })
-    setData((categories) => categories.map((category) => ({ ...category, lineages: category.lineages.map((lineage) => lineage.lineageId === active.lineage.lineageId ? { ...lineage, familyTree: remove(lineage.familyTree) } : lineage) })))
+    const currentLineage = data
+      .flatMap((category) => category.lineages)
+      .find((lineage) => lineage.lineageId === active.lineage.lineageId)
+    const isRoot = currentLineage?.familyTree?.id === nodeId
+    const message = isRoot
+      ? '確定要刪除這個起始個體及其所有關聯個體與紀錄嗎？物種與血統會保留。'
+      : '確定要刪除這個族譜節點及其後代嗎？'
+    if (!window.confirm(message)) return
+
+    const remove = (node) => {
+      if (!node) return node
+      return {
+        ...node,
+        partners: (node.partners || []).filter((partner) => partner.id !== nodeId).map(remove),
+        children: (node.children || []).filter((child) => child.id !== nodeId).map(remove),
+      }
+    }
+
+    setData((categories) => categories.map((category) => ({
+      ...category,
+      lineages: category.lineages.map((lineage) =>
+        lineage.lineageId === active.lineage.lineageId
+          ? { ...lineage, familyTree: isRoot ? null : remove(lineage.familyTree) }
+          : lineage,
+      ),
+    })))
     setSelectedBeetle(null)
   }
 
@@ -852,7 +906,10 @@ function DashboardApp({ session, onLogout }) {
           collapsed={collapsed}
           onToggle={() => setCollapsed((value) => !value)}
           onSelect={selectLineage}
-          onCreate={() => setShowForm(true)}
+          onCreate={() => {
+            setCreateTarget(null)
+            setShowForm(true)
+          }}
           onEditCategory={editCategory}
           onDeleteCategory={deleteCategory}
         />
@@ -883,6 +940,13 @@ function DashboardApp({ session, onLogout }) {
             onNodeSelect={setSelectedBeetle}
             onDeleteNode={deleteNode}
             onAddRelation={setRelationTarget}
+            onCreateRoot={() => {
+              setCreateTarget({
+                categoryId: latest.category.categoryId,
+                lineageId: latest.lineage.lineageId,
+              })
+              setShowForm(true)
+            }}
           />
         </main>
 
@@ -907,7 +971,12 @@ function DashboardApp({ session, onLogout }) {
         {showForm && (
           <CreateRecordForm
             data={data}
-            onClose={() => setShowForm(false)}
+            initialCategoryId={createTarget?.categoryId}
+            initialLineageId={createTarget?.lineageId}
+            onClose={() => {
+              setShowForm(false)
+              setCreateTarget(null)
+            }}
             onCreate={create}
           />
         )}

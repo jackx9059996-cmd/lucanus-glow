@@ -7,29 +7,38 @@ const rules = {
   CBF: 'CBF 可自行填寫代數，成蟲與幼蟲可分開建立，幼蟲也可保留父母尺寸。',
 }
 
-const defaultForm = (data) => ({
-  categoryId: data[0]?.categoryId || '',
-  lineageId: '',
-  scientificName: '',
-  commonName: '',
-  lineageName: '',
-  prefix: 'WD',
-  generation: '',
-  stage: 'adult',
-  instar: 'L1',
-  gender: 'male',
-  size: '',
-  fatherSize: '',
-  motherSize: '',
-  locality: '',
-  collectionDate: '',
-  note: '',
-})
+const defaultForm = (data, initialCategoryId, initialLineageId) => {
+  const categoryId = initialCategoryId || data[0]?.categoryId || ''
+  const lineage = data
+    .find((item) => item.categoryId === categoryId)
+    ?.lineages.find((item) => item.lineageId === initialLineageId)
+  const generationCode = lineage?.generationCode || ''
+  const prefix = generationCode.startsWith('CBF') ? 'CBF' : generationCode.startsWith('WF') ? 'WF' : 'WD'
 
-export default function CreateRecordForm({ data, onClose, onCreate }) {
+  return {
+    categoryId,
+    lineageId: initialLineageId || '',
+    scientificName: '',
+    commonName: '',
+    lineageName: '',
+    prefix,
+    generation: generationCode.slice(prefix.length),
+    stage: 'adult',
+    instar: 'L1',
+    gender: 'male',
+    size: '',
+    fatherSize: '',
+    motherSize: '',
+    locality: '',
+    collectionDate: '',
+    note: '',
+  }
+}
+
+export default function CreateRecordForm({ data, onClose, onCreate, initialCategoryId = '', initialLineageId = '' }) {
   const [speciesMode, setSpeciesMode] = useState(data.length ? 'existing' : 'new')
-  const [lineageMode, setLineageMode] = useState('new')
-  const [form, setForm] = useState(() => defaultForm(data))
+  const [lineageMode, setLineageMode] = useState(initialLineageId ? 'existing' : 'new')
+  const [form, setForm] = useState(() => defaultForm(data, initialCategoryId, initialLineageId))
 
   const category = useMemo(
     () => data.find((item) => item.categoryId === form.categoryId),

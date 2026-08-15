@@ -458,6 +458,42 @@ textarea {
     #f5f8ef;
 }
 
+.empty-family-tree {
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  text-align: center;
+}
+
+.empty-family-tree > div {
+  width: min(360px, 100%);
+  border: 1px solid #dce8d3;
+  border-radius: 16px;
+  padding: 28px 22px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 30px rgba(51, 106, 41, 0.08);
+}
+
+.empty-family-tree svg {
+  color: #80b155;
+}
+
+.empty-family-tree h3 {
+  margin: 12px 0 6px;
+  color: #293427;
+  font-size: 17px;
+}
+
+.empty-family-tree p {
+  margin: 0 0 18px;
+  color: #7b8875;
+  font-size: 12px;
+}
+
+.empty-family-tree .create-button {
+  margin: 0 auto;
+}
+
 .beetle-node {
   position: relative;
   width: 224px;
