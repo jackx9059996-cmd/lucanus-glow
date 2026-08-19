@@ -5,7 +5,14 @@
 :root {
   font-family: "Microsoft JhengHei", "PingFang TC", sans-serif;
   color: #202b1f;
-  background: #f7f9f3;
+  background: #f3f2ec;
+  --morandi-forest: #536b52;
+  --morandi-forest-deep: #465b47;
+  --morandi-sage: #8f9e83;
+  --morandi-sage-deep: #687b64;
+  --morandi-mist: #eef0e9;
+  --morandi-cream: #f7f6f1;
+  --morandi-line: #d8ddd3;
 }
 
 * {
@@ -22,8 +29,8 @@ body,
 
 body {
   background:
-    radial-gradient(circle at top right, rgba(205, 232, 157, 0.35), transparent 24rem),
-    linear-gradient(180deg, #fbfcf8 0%, #f3f7ec 100%);
+    radial-gradient(circle at top right, rgba(191, 197, 169, 0.28), transparent 24rem),
+    linear-gradient(180deg, #f8f7f2 0%, #efefe8 100%);
 }
 
 button,
@@ -39,8 +46,8 @@ textarea {
   place-items: center;
   padding: 24px;
   background:
-    linear-gradient(135deg, rgba(234, 239, 157, 0.42), rgba(128, 177, 85, 0.2)),
-    #f8faf4;
+    linear-gradient(135deg, rgba(210, 206, 176, 0.38), rgba(143, 158, 131, 0.2)),
+    var(--morandi-cream);
 }
 
 .login-panel {
@@ -60,7 +67,7 @@ textarea {
 
 .login-panel h1 {
   margin: 0;
-  color: #336a29;
+  color: var(--morandi-forest);
   font-family: "PMingLiU", "MingLiU", "Noto Serif TC", serif;
   font-size: 34px;
   font-weight: 900;
@@ -91,7 +98,7 @@ textarea {
   border: 0;
   border-radius: 8px;
   padding: 13px 16px;
-  background: #336a29;
+  background: var(--morandi-forest);
   color: #fff;
   font-weight: 800;
   cursor: pointer;
@@ -124,9 +131,9 @@ textarea {
   justify-content: space-between;
   gap: 16px;
   padding: 0 24px;
-  background: rgba(255, 255, 255, 0.96);
-  border-bottom: 1px solid #e5eadf;
-  color: #336a29;
+  background: rgba(248, 247, 242, 0.96);
+  border-bottom: 1px solid var(--morandi-line);
+  color: var(--morandi-forest);
   font-family: "PMingLiU", "MingLiU", "Noto Serif TC", serif;
   font-size: 20px;
   font-weight: 900;
@@ -150,7 +157,7 @@ textarea {
   border-radius: 999px;
   padding: 5px 10px;
   background: #fff;
-  color: #336a29;
+  color: var(--morandi-forest);
   cursor: pointer;
 }
 
@@ -164,8 +171,8 @@ textarea {
 .sidebar {
   width: 215px;
   flex: 0 0 215px;
-  background: rgba(255, 255, 255, 0.92);
-  border-right: 1px solid #e5eadf;
+  background: rgba(248, 247, 242, 0.94);
+  border-right: 1px solid var(--morandi-line);
   display: flex;
   flex-direction: column;
   transition: width 0.22s ease, flex-basis 0.22s ease;
@@ -199,7 +206,7 @@ textarea {
 .create-button,
 .header-create {
   border: 0;
-  background: #336a29;
+  background: var(--morandi-forest);
   color: #fff;
   border-radius: 12px;
   padding: 11px 14px;
@@ -214,7 +221,7 @@ textarea {
 
 .create-button:hover,
 .header-create:hover {
-  background: #2b5a23;
+  background: var(--morandi-forest-deep);
 }
 
 .sidebar > .create-button {
@@ -306,7 +313,7 @@ textarea {
 .nav-manage button:hover,
 .record-actions button:hover,
 .ghost-action:hover {
-  color: #336a29;
+  color: var(--morandi-forest);
 }
 
 .nav-parent .nav-chevron {
@@ -327,7 +334,7 @@ textarea {
 
 .nav-parent em {
   font-family: Georgia, serif;
-  color: #336a29;
+  color: var(--morandi-forest);
   font-style: italic;
   font-size: 10px;
   overflow: hidden;
@@ -366,21 +373,21 @@ textarea {
 
 .nav-child:hover,
 .nav-child.active {
-  color: #336a29;
-  background: #f1f7e7;
+  color: var(--morandi-forest);
+  background: #e9ece4;
 }
 
 .nav-child.active {
   font-weight: 700;
-  border-left: 2px solid #336a29;
+  border-left: 2px solid var(--morandi-forest);
   margin-left: -1px;
 }
 
 .nav-child b {
   flex: 0 0 auto;
-  color: #336a29;
-  border: 1px solid #b9d2a5;
-  background: #f4f9ec;
+  color: var(--morandi-forest);
+  border: 1px solid #bdc8b5;
+  background: #eef0e9;
   border-radius: 999px;
   padding: 2px 6px;
   font-size: 10px;
@@ -442,20 +449,20 @@ textarea {
   color: #6f8067;
   font-size: 13px;
   border-bottom: 1px solid #edf0e9;
-  background: #fbfdf7;
+  background: #f7f6f1;
 }
 
 .tree-description svg {
-  color: #80b155;
+  color: var(--morandi-sage-deep);
 }
 
 .content-tree {
   min-height: 0;
   flex: 1;
   background:
-    radial-gradient(circle at 80% 20%, rgba(234, 238, 157, 0.45), transparent 22rem),
-    radial-gradient(circle at 15% 85%, rgba(128, 177, 85, 0.14), transparent 14rem),
-    #f5f8ef;
+    radial-gradient(circle at 80% 20%, rgba(210, 206, 176, 0.34), transparent 22rem),
+    radial-gradient(circle at 15% 85%, rgba(143, 158, 131, 0.14), transparent 14rem),
+    #f1f2eb;
 }
 
 .empty-family-tree {
@@ -475,7 +482,7 @@ textarea {
 }
 
 .empty-family-tree svg {
-  color: #80b155;
+  color: var(--morandi-sage-deep);
 }
 
 .empty-family-tree h3 {
@@ -498,8 +505,8 @@ textarea {
   position: relative;
   width: 224px;
   border: 1px solid #d6e3cb;
-  border-top: 4px solid #80b155;
-  background: #fff;
+  border-top: 4px solid var(--morandi-sage);
+  background: #faf9f5;
   box-shadow: 0 7px 18px rgba(53, 106, 41, 0.09);
   border-radius: 14px;
   padding: 14px 15px;
@@ -509,16 +516,16 @@ textarea {
 }
 
 .beetle-node:hover {
-  border-color: #498428;
+  border-color: var(--morandi-sage-deep);
   box-shadow: 0 8px 22px rgba(53, 106, 41, 0.14);
 }
 
 .beetle-node.pair {
-  border-top-color: #356a29;
+  border-top-color: var(--morandi-forest);
 }
 
 .beetle-node.male {
-  border-top-color: #498428;
+  border-top-color: var(--morandi-sage-deep);
 }
 
 .node-top,
@@ -557,7 +564,7 @@ textarea {
 }
 
 .react-flow__edge-path {
-  stroke: #88a677;
+  stroke: #879681;
   stroke-width: 1.4;
 }
 
@@ -566,15 +573,15 @@ textarea {
 }
 
 .react-flow__controls-button {
-  background: #fff !important;
-  border-color: #dce7d5 !important;
-  color: #43633a !important;
+  background: #f8f7f2 !important;
+  border-color: var(--morandi-line) !important;
+  color: var(--morandi-forest) !important;
 }
 
 .detail-drawer {
   width: min(460px, 38vw);
   flex: 0 0 min(460px, 38vw);
-  background: #f6f9f1;
+  background: #f1f1eb;
   border-left: 1px solid #e2e9dc;
   display: flex;
   flex-direction: column;
@@ -591,7 +598,7 @@ textarea {
 
 .drawer-header {
   padding: 8px 14px 4px;
-  background: rgba(128, 177, 85, 0.18);
+  background: rgba(143, 158, 131, 0.2);
   border-bottom: 0;
   gap: 8px;
 }
@@ -725,7 +732,7 @@ textarea {
   border-bottom: 1px solid transparent;
   padding: 1px 2px;
   background: transparent;
-  color: #336a29;
+  color: var(--morandi-forest);
   font-size: 11px;
   font-weight: 800;
   line-height: 1.2;
@@ -734,7 +741,7 @@ textarea {
 
 .quick-size-input:hover,
 .quick-size-input:focus {
-  border-bottom-color: #80b155;
+  border-bottom-color: var(--morandi-sage-deep);
 }
 
 .quick-size-input::placeholder {
@@ -750,22 +757,22 @@ textarea {
 }
 
 .drawer-banner {
-  background: rgba(128, 177, 85, 0.18);
-  border-bottom: 1px solid rgba(128, 177, 85, 0.26);
+  background: rgba(143, 158, 131, 0.18);
+  border-bottom: 1px solid rgba(143, 158, 131, 0.3);
 }
 
 .record-workspace {
   min-height: 0;
   display: grid;
   grid-template-rows: minmax(0, 1fr);
-  background: #f6f9f1;
+  background: #f1f1eb;
 }
 
 .timeline-section {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  background: #f6f9f1;
+  background: #f1f1eb;
 }
 
 .timeline-head {
@@ -773,7 +780,7 @@ textarea {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f6f9f1;
+  background: #f1f1eb;
   border-bottom: 1px solid #edf0e9;
 }
 
@@ -833,7 +840,7 @@ textarea {
   width: 11px;
   height: 11px;
   margin-top: 4px;
-  background: #336a29;
+  background: var(--morandi-forest);
   border-radius: 50%;
   z-index: 1;
 }
@@ -847,7 +854,7 @@ textarea {
 }
 
 .record-line b {
-  color: #356a29;
+  color: var(--morandi-forest);
   font-size: 13px;
 }
 
@@ -956,8 +963,8 @@ textarea {
 .generation-fields select:focus,
 .generation-fields input:focus,
 .species-picker select:focus {
-  border-color: #80b155;
-  box-shadow: 0 0 0 3px rgba(128, 177, 85, 0.24);
+  border-color: var(--morandi-sage);
+  box-shadow: 0 0 0 3px rgba(143, 158, 131, 0.22);
 }
 
 .feed-form .create-button {
@@ -1023,8 +1030,8 @@ textarea {
 }
 
 .node-action-menu button:hover {
-  background: #f0f6ea;
-  color: #336a29;
+  background: #eaede6;
+  color: var(--morandi-forest);
 }
 
 .modal-backdrop {
@@ -1059,7 +1066,7 @@ textarea {
 .species-picker {
   margin: 20px 25px 0;
   padding: 15px;
-  background: #f6f9f1;
+  background: #f1f1eb;
   display: grid;
   gap: 11px;
   border-radius: 14px;
@@ -1097,8 +1104,8 @@ textarea {
 }
 
 .mode-switch button.active {
-  color: #336a29;
-  border-bottom-color: #336a29;
+  color: var(--morandi-forest);
+  border-bottom-color: var(--morandi-forest);
   font-weight: 700;
 }
 
@@ -1122,7 +1129,7 @@ textarea {
   grid-column: 1 / -1;
   margin: -5px 0 0;
   padding: 10px 12px;
-  background: #f6f9f1;
+  background: #f1f1eb;
   color: #66795d;
   font-size: 12px;
   line-height: 1.55;
@@ -1206,14 +1213,14 @@ textarea {
 }
 
 .relation-type-options button:hover {
-  border-color: #80b155;
+  border-color: var(--morandi-sage);
 }
 
 .relation-type-options button.active {
-  border-color: #336a29;
-  background: #f1f7e9;
-  color: #285620;
-  box-shadow: inset 0 0 0 1px #336a29;
+  border-color: var(--morandi-forest);
+  background: #e9ece4;
+  color: var(--morandi-forest-deep);
+  box-shadow: inset 0 0 0 1px var(--morandi-forest);
 }
 
 .relation-type-options strong,
